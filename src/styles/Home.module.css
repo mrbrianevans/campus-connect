@@ -8,7 +8,7 @@
 }
 
 .imageBackground {
-    background-image: url('../public/background.jpg');
+    background-image: url('../../public/background.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;
@@ -20,7 +20,7 @@
 }
 
 .laverBackground {
-    background-image: url('../public/static/laver.jpg');
+    background-image: url('../../public/static/laver.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;
@@ -32,7 +32,7 @@
 }
 
 .constructionBackground {
-    background-image: url('../public/static/construction.jpg');
+    background-image: url('../../public/static/construction.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;
@@ -44,7 +44,7 @@
 }
 
 .skylineBackground {
-    background-image: url('../public/static/skyline.jpg');
+    background-image: url('../../public/static/skyline.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;
@@ -56,7 +56,7 @@
 }
 
 .exeterStoneBackground {
-    background-image: url('../public/static/exeter_stone.jpg');
+    background-image: url('../../public/static/exeter_stone.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;
@@ -68,7 +68,7 @@
 }
 
 .forumHillBackground {
-    background-image: url('../public/static/forum_hill.jpg');
+    background-image: url('../../public/static/forum_hill.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;
@@ -80,7 +80,7 @@
 }
 
 .amoryBackground {
-    background-image: url('../public/static/amory.jpg');
+    background-image: url('../../public/static/amory.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;
@@ -92,7 +92,7 @@
 }
 
 .riverBackground {
-    background-image: url('../public/static/river.jpg');
+    background-image: url('../../public/static/river.jpg');
     background-size: cover;
     filter: blur(10px);
     width: 100%;

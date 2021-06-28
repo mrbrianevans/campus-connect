@@ -7,9 +7,6 @@ export const getDatabasePool = () => {
         host: process.env.DB_HOST,
         database: process.env.DB_NAME,
         port: process.env.DB_PORT,
-        ssl: {
-            rejectUnauthorized: false,
-            requestCert: false
-        }
+        ssl: false
     })
 }
