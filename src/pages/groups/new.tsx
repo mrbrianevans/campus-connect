@@ -7,9 +7,9 @@ import Navbar from '../../components/Navbar/Navbar'
 import { useSession } from 'next-auth/client'
 
 const NewGroup = ({ groups }) => {
-    const [name, setName] = useState()
-    const [description, setDescription] = useState()
-    const [errorMessage, setErrorMessage] = useState()
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const router = useRouter()
     const [session, loading] = useSession()
     if (loading) {

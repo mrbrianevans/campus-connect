@@ -17,10 +17,10 @@ const PostPage = ({ groups }) => {
     const [editingTitle, setEditingTitle] = useState(false)
     const [editingContent, setEditingContent] = useState(false)
     const [isEditing] = useState(post_id !== undefined)
-    const [title, setTitle] = useState()
-    const [content, setContent] = useState()
+    const [title, setTitle] = useState('')
+    const [content, setContent] = useState('')
     const [group, setGroup] = useState(groups[0].id)
-    const [errorMessage, setErrorMessage] = useState()
+    const [errorMessage, setErrorMessage] = useState('')
     const [successMessage, setSuccessMessage] = useState()
     const [currentUserName, setCurrentUsername] = useState()
     const router = useRouter()
@@ -85,9 +85,9 @@ const PostPage = ({ groups }) => {
                     />
                 )}
                 <main className={styles.main}>
-                    <h1 className={styles.title}> Posts</h1>
+                    <h1 className={styles.title}> Articles</h1>
 
-                    <p className={styles.description}>Write a new post</p>
+                    <p className={styles.description}>Write a new article</p>
                     <article className={postStyles.post}>
                         <h2>
                             {editingTitle ? (
@@ -140,7 +140,28 @@ const PostPage = ({ groups }) => {
                                 onClick={() => setEditingContent(true)}
                                 className={postStyles.articleContent}>
                                 <ReactMarkdown renderers={renderers}>
-                                    {content || defaultContent}
+                                    {content ||
+                                        `
+### Click here to write your new article!
+
+You can use markdown in your post for styling.
+
+You can use ** for **bold**, and * for *italics*.
+
+Backticks (\`) for inline code :
+
+\`var x = 5\`
+
+Triple tilde (\~\~\~) for code blocks with syntax highlighting
+~~~python
+def python():
+    print("Hello World!")
+~~~
+#### \`####\`  hashes for headings
+
+\`![title](image/url.jpeg)\` for images
+
+                                        `}
                                 </ReactMarkdown>
                             </div>
                         )}
@@ -241,12 +262,3 @@ export async function getServerSideProps() {
         }
     }
 }
-
-const defaultContent = `
-Click here to start typing your post 
-
-Try to keep it less than 250 characters to classify as a post. 
-
-You can use emojis 🧡 to make your post more engaging!
-
-                                        `

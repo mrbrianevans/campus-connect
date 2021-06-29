@@ -19,47 +19,47 @@ export default function Terms() {
                         <h3 className={termsStyles.date}>
                             Last updated: 06/03/2021
                         </h3>
-                        <p1 className={termsStyles.description}>
+                        <p className={termsStyles.description}>
                             These terms and conditions apply to your access and
                             use of Campus Connect. Please read them<br></br>
                             carefully.
-                        </p1>
+                        </p>
                         <hr></hr>
                         <div className={termsStyles.subtitle}>
                             Accepting terms
                         </div>
-                        <p1 className={termsStyles.description}>
+                        <p className={termsStyles.description}>
                             If you access or use this service, you are agreeing
                             to uphold all of the terms below. If you do not
                             <br></br>
                             agree then please do not use the service.
-                        </p1>
+                        </p>
                         <hr></hr>
                         <div className={termsStyles.subtitle}>
                             Changes to terms
                         </div>
-                        <p1 className={termsStyles.description}>
+                        <p className={termsStyles.description}>
                             At any point in time we reserve the right to modify
                             and change these terms if, for example, we <br></br>
                             update or modify the app.
-                        </p1>
+                        </p>
                         <hr></hr>
                         <div className={termsStyles.subtitle}>
                             Our Policies and Conduct
                         </div>
-                        <p1 className={termsStyles.description}>
+                        <p className={termsStyles.description}>
                             Campus Connect will allow users to upload, interact
                             and share posts and content, as a user you<br></br>
                             are responsible for content that you decide to make
                             available. This includes ensuring your<br></br>
                             content is appropriate.
-                        </p1>{' '}
+                        </p>{' '}
                         <br></br>
-                        <p1 className={termsStyles.description}>
+                        <p className={termsStyles.description}>
                             We reserve the right to restrict, modify and delete
                             any content you upload if we deem it<br></br>
                             innapropriate. Content must not:
-                        </p1>
+                        </p>
                         <li className={termsStyles.description}>
                             Contain harmful links, viruses or corrupted data.
                         </li>
@@ -75,18 +75,18 @@ export default function Terms() {
                         <div className={termsStyles.subtitle}>
                             Boring legal stuff
                         </div>
-                        <p1 className={termsStyles.description}>
+                        <p className={termsStyles.description}>
                             At no stage are we legally liable for anything.
-                        </p1>
+                        </p>
                         <hr></hr>
                         <div className={termsStyles.subtitle}>
                             Account Termination
                         </div>
-                        <p1 className={termsStyles.description}>
+                        <p className={termsStyles.description}>
                             At any time we can and will terminate your account
                             if we deem that you have broke any of these<br></br>
                             terms.
-                        </p1>
+                        </p>
                     </div>
                 </div>
             </main>

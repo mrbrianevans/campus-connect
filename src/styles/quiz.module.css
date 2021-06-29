@@ -22,7 +22,7 @@
 .question {
     line-height: 1.5;
     font-size: 1.5rem;
-    font-style: bold;
+    font-weight: bold;
 }
 
 button.answerBtn {

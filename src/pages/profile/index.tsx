@@ -7,10 +7,28 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
+interface UserProfile {
+    username: string
+    firstname
+    surname
+    email
+    id
+    signup_date
+    rolename
+    noofposts
+}
+
+interface UserPosts {
+    posttitle: string
+    postcontent: string
+    timestamp: Date
+    id: number
+}
+
 export default function Profile() {
     const [session, loading] = useSession()
-    const [user, setUserData] = useState()
-    const [posts, setUserPosts] = useState()
+    const [user, setUserData] = useState<UserProfile>()
+    const [posts, setUserPosts] = useState<UserPosts[]>()
     const [profilePicture, setProfilePicture] = useState()
     const router = useRouter()
 

@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format": "prettier --write \"**/*.(js|css)\""
+    "format": "prettier --write \"**/*.(js|css|ts|tsx)\""
   },
   "dependencies": {
     "axios": "0.21.1",
@@ -24,6 +24,8 @@
   },
   "author": "Brian Evans, Adam Tweedie, Alex Rundle, Toby Trounce, Matthew Hudson",
   "devDependencies": {
-    "prettier": "^2.2.1"
+    "@types/node": "^15.12.5",
+    "prettier": "^2.2.1",
+    "typescript": "^4.3.4"
   }
 }
