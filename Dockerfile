@@ -1,26 +1,14 @@
-FROM node:16-slim
+FROM node:16
 
-COPY package*.json .
-
-RUN npm install -g npm@7.19.0
-
+WORKDIR /app
+RUN npm install -g npm@latest-6
+# RUN corepack enable && corepack prepare pnpm@7.4.0 --activate
+# COPY package.json pnpm-lock.yaml ./
+COPY package*.json ./
+RUN npm install
 COPY . .
 
 RUN npm run build
 
 CMD ["npm", "run", "start"]
 
-#RUN git clone https://github.com/vishnubob/wait-for-it.git
-# waits for the database to do a build because static generation requires the db
-#RUN ./wait-for-it/wait-for-it.sh postbase:5438 -- npm run build
-
-#FROM node:16-slim
-#
-#COPY package*.json .
-#
-#RUN npm install --production
-#
-#COPY --from=compiled /.next /.next
-#COPY --from=compiled /.env.local .
-#
-#CMD ["npm", "run", "start"]

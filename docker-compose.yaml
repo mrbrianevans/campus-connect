@@ -2,16 +2,22 @@ version: '3'
 
 services:
   postbase:
-    image: postgres
+    build: database
     ports:
-      - 5432:5432
+      - "5432:5432"
     env_file:
       - .env.local
     volumes:
-      - ./data/sql/ddl/tables_ddl.sql:/docker-entrypoint-initdb.d/tables_ddl.sql
+      - db_data:/var/lib/postgresql/data
   webserver:
     build: .
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       - postbase
+    env_file:
+      - .env.local
+    environment:
+      DB_HOST: postbase
+volumes:
+  db_data:
