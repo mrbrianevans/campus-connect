@@ -1,13 +1,16 @@
-const pgp = require('pg-promise')({ noWarnings: true })
-const { PreparedStatement } = require('pg-promise')
+import pg_promise, { PreparedStatement } from 'pg-promise'
 
-require('dotenv').config()
-var connectionObject = {
+import { config } from 'dotenv'
+
+const pgp = pg_promise({ noWarnings: true })
+
+config()
+const connectionObject = {
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT ?? '5432'),
     ssl: {
         rejectUnauthorized: false,
         requestCert: false
@@ -19,25 +22,26 @@ const db = pgp(connectionObject)
 export default async (req, res) => {
     try {
         if (req.method === 'POST') {
-            var username = req.body.username
-            var email = req.body.email
+            const userid = req.body.userid
 
-            const getIdStatement = new PreparedStatement({
-                name: 'get-user-id',
-                text: `SELECT u.id
-                       FROM Users u
-                       WHERE u.username = $1
-                         AND u.email = $2`,
-                values: [username, email]
+            // Prepared statement to get user details
+            const getUserStatement = new PreparedStatement({
+                name: 'get-user-details',
+                text: `SELECT Posts.posttitle, Posts.postcontent, Posts.timestamp, posts.id
+                       FROM Posts
+                                LEFT JOIN Users ON Users.id = Posts.userid
+                       WHERE Users.id = $1;`,
+                values: [userid]
             })
 
             const result = await db
-                .one(getIdStatement)
+                .any(getUserStatement)
                 .then((result) => {
+                    // If a result is found, send status 200 with relevant info in payload
                     res.status(200).json(result)
                 })
                 .catch((err) => {
-                    console.log(err)
+                    // If userID cannot be found, status 404
                     if (err.code == pgp.errors.queryResultErrorCode.noData) {
                         res.status(404).json({
                             message: 'Could not find requested user'

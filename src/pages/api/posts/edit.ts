@@ -1,3 +1,5 @@
+import { getDatabasePool } from '../../../database/db-connect'
+
 export default async (req, res) => {
     //check that input is not null
     const validationError = validateInput(
@@ -28,7 +30,6 @@ export default async (req, res) => {
 }
 
 const submitPost = async (title, content, user, group, post_id) => {
-    const { getDatabasePool } = require('../../../database/db-connect')
     const pool = getDatabasePool()
     // console.log('Editing:', post_id, title, content, user, group)
 

@@ -1,13 +1,16 @@
-const pgp = require('pg-promise')({ noWarnings: true })
-const { PreparedStatement } = require('pg-promise')
+import pg_promise, { PreparedStatement } from 'pg-promise'
 
-require('dotenv').config()
-var connectionObject = {
+import { config } from 'dotenv'
+
+const pgp = pg_promise({ noWarnings: true })
+
+config()
+const connectionObject = {
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT ?? '5432'),
     ssl: {
         rejectUnauthorized: false,
         requestCert: false
@@ -29,7 +32,7 @@ export default async (req, res) => {
 
 const deleteUser = async (post_id, req, res) => {
     try {
-        var userid = req.body.userid
+        const userid = req.body.userid
 
         const delUserStatement = new PreparedStatement({
             name: 'del-user',

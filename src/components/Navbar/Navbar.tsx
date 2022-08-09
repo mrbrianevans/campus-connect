@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import navbarStyles from '../../styles/navbar.module.css'
 
-export default function Navbar(props) {
+interface NavbarProps {
+    content: { title: string; url: string }[]
+}
+
+export default function Navbar(props: NavbarProps) {
     const [clicked, setClicked] = useState(false)
 
     useEffect(() => {
@@ -13,20 +17,6 @@ export default function Navbar(props) {
         setClicked(!clicked)
     }
 
-    const menuContent = new Array()
-    var link
-    if (props && props.content) {
-        if (props.content.length > 5) {
-            for (link = 0; link < 5; link++) {
-                menuContent.push(props.content[link])
-            }
-        } else {
-            for (link = 0; link < props.content.length; link++) {
-                menuContent.push(props.content[link])
-            }
-        }
-    }
-
     return (
         <>
             <Head>
@@ -34,7 +24,7 @@ export default function Navbar(props) {
                     rel="stylesheet"
                     href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
                     integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu"
-                    crossorigin="anonymous"
+                    crossOrigin="anonymous"
                 ></link>
             </Head>
             <nav className={navbarStyles.NavbarItems}>
@@ -57,7 +47,7 @@ export default function Navbar(props) {
                             : navbarStyles.navmenu
                     }
                 >
-                    {menuContent.map((item, index) => {
+                    {props.content.slice(0, 5).map((item, index) => {
                         return (
                             <li key={index} style={{ listStyleType: 'none' }}>
                                 <a

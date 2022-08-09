@@ -1,4 +1,4 @@
-const { Pool } = require('pg')
+import { Pool } from 'pg'
 
 export const getDatabasePool = () => {
     return new Pool({
@@ -6,7 +6,7 @@ export const getDatabasePool = () => {
         password: process.env.POSTGRES_PASSWORD,
         host: process.env.DB_HOST,
         database: process.env.POSTGRES_DB,
-        port: process.env.DB_PORT,
+        port: parseInt(process.env.DB_PORT ?? '5432'),
         ssl: false
     })
 }

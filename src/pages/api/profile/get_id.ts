@@ -1,13 +1,16 @@
-const pgp = require('pg-promise')({ noWarnings: true })
-const { PreparedStatement } = require('pg-promise')
+import pg_promise, { PreparedStatement } from 'pg-promise'
 
-require('dotenv').config()
-var connectionObject = {
+import { config } from 'dotenv'
+
+const pgp = pg_promise({ noWarnings: true })
+
+config()
+const connectionObject = {
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT ?? '5432'),
     ssl: {
         rejectUnauthorized: false,
         requestCert: false
@@ -19,28 +22,24 @@ const db = pgp(connectionObject)
 export default async (req, res) => {
     try {
         if (req.method === 'POST') {
-            var userid = req.body.userid
+            const username = req.body.username
+            const email = req.body.email
 
-            // Prepared statement to get user details
-            const getUserStatement = new PreparedStatement({
-                name: 'get-user-details',
-                text: `SELECT Users.username, Users.firstname, Users.surname, Users.email, Users.signup_date, Roles.rolename, COUNT(Posts.id) AS noofposts
-                       FROM Users
-                       LEFT JOIN Posts ON Users.id = Posts.userid
-                       LEFT JOIN Roles ON Roles.roleid = Users.roleid
-                       WHERE Users.id = $1
-                       GROUP BY Users.username, Users.firstname, Users.surname, Users.email, Users.signup_date, Roles.rolename;`,
-                values: [userid]
+            const getIdStatement = new PreparedStatement({
+                name: 'get-user-id',
+                text: `SELECT u.id
+                       FROM Users u
+                       WHERE u.username = $1
+                         AND u.email = $2`,
+                values: [username, email]
             })
 
             const result = await db
-                .one(getUserStatement)
+                .one(getIdStatement)
                 .then((result) => {
-                    // If a result is found, send status 200 with relevant info in payload
                     res.status(200).json(result)
                 })
                 .catch((err) => {
-                    // If userID cannot be found, status 404
                     console.log(err)
                     if (err.code == pgp.errors.queryResultErrorCode.noData) {
                         res.status(404).json({

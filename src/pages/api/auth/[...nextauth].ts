@@ -2,16 +2,16 @@ import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import validation from '../modules/validation'
 
-const pgp = require('pg-promise')({ noWarnings: true })
-const { PreparedStatement } = require('pg-promise')
-const bcrypt = require('bcrypt')
+import bcrypt from 'bcrypt'
+import pg_promise, { PreparedStatement } from 'pg-promise'
 
+const pgp = pg_promise({ noWarnings: true })
 const connectionObject = {
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT ?? '5432'),
     ssl: {
         rejectUnauthorized: false,
         requestCert: false
@@ -22,17 +22,19 @@ const connectionObject = {
  * Returns the user credentials, and returns the information for the session
  * @param {Object} credentials
  */
-async function checkCredentials(credentials) {
+async function checkCredentials(
+    credentials: Record<'username' | 'password', string> | undefined
+) {
     const db = pgp(connectionObject)
-    const username = credentials.username
-    const password = credentials.password
+    const username = credentials?.username ?? ''
+    const password = credentials?.password ?? ''
 
     // Validates that the username and password are of correct length
     if (!validation.validateUsername(username)) {
-        return
+        return null
     }
     if (!validation.validatePassword(password)) {
-        return
+        return null
     }
 
     // Login statement to select password and email.
@@ -64,6 +66,7 @@ async function checkCredentials(credentials) {
 export default NextAuth({
     providers: [
         Credentials({
+            type: 'credentials',
             id: 'username-login',
             name: '',
             credentials: {
@@ -76,9 +79,6 @@ export default NextAuth({
                     label: 'Password',
                     type: 'password'
                 }
-            },
-            pages: {
-                signIn: '/login'
             },
             authorize: async (credentials) => {
                 return checkCredentials(credentials)

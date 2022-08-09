@@ -1,3 +1,5 @@
+import { getDatabasePool } from '../../../database/db-connect'
+
 export default async (req, res) => {
     const validationError = validateRequest(req.body.post_id, req.body.username)
     const notReported = await checkReport(req.body.post_id, req.body.username)
@@ -31,9 +33,7 @@ export default async (req, res) => {
 
 // Checks if the user has already
 const checkReport = async (post_id, username) => {
-    const { getDatabasePool } = require('../../../database/db-connect')
     const pool = getDatabasePool()
-
     const { rowCount } = await pool.query(
         `
             SELECT * FROM reported_posts
@@ -51,9 +51,7 @@ const checkReport = async (post_id, username) => {
 
 // Inserts report into the database
 const reportPost = async (post_id, username) => {
-    const { getDatabasePool } = require('../../../database/db-connect')
     const pool = getDatabasePool()
-
     const { rows } = await pool.query(
         `
             INSERT INTO reported_posts (username, post_id)

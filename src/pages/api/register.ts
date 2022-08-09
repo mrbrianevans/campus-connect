@@ -1,14 +1,15 @@
-const pgp = require('pg-promise')({ noWarnings: true })
-const { PreparedStatement } = require('pg-promise')
-const bcrypt = require('bcrypt')
-const validation = require('./modules/validation.js')
+import pg_promise, { PreparedStatement } from 'pg-promise'
 
-var connectionObject = {
+import bcrypt from 'bcrypt'
+import validation from './modules/validation'
+
+const pgp = pg_promise({ noWarnings: true })
+const connectionObject = {
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT ?? '5432'),
     ssl: {
         rejectUnauthorized: false,
         requestCert: false
@@ -20,10 +21,10 @@ const db = pgp(connectionObject)
 export default async (req, res) => {
     try {
         if (req.method === 'POST') {
-            var username = req.body.username
-            var email = req.body.email
-            var firstname = req.body.firstname
-            var lastname = req.body.lastname
+            const username = req.body.username
+            const email = req.body.email
+            const firstname = req.body.firstname
+            const lastname = req.body.lastname
 
             // validate username, email, firstname, lastname and password.
             if (!validation.validateUsername(username)) {
@@ -48,7 +49,7 @@ export default async (req, res) => {
             }
 
             // hash the password with bcrypt using 10 rounds
-            var passwordHash = bcrypt.hashSync(req.body.pass, 10)
+            const passwordHash = bcrypt.hashSync(req.body.pass, 10)
 
             // prepared statement to input to PostgreSQL
             const registerStatement = new PreparedStatement({

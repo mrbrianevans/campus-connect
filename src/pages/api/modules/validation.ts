@@ -29,7 +29,7 @@ function validatePassword(pass) {
     return true
 }
 
-module.exports = {
+export default {
     validateUsername,
     validatePassword,
     validateName,
