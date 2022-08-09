@@ -22,12 +22,15 @@
       {
         "name": "typescript-plugin-css-modules"
       }
-    ]
+    ],
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.js",
+    "**/*.tsx",
+    "**/*.jsx"
   ],
   "exclude": [
     "node_modules"

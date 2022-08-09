@@ -3,10 +3,13 @@ import styles from '../../styles/Home.module.css'
 import { getDatabasePool } from '../../database/db-connect'
 import postStyles from '../../styles/post.module.css'
 import Navbar from '../../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
 
 export default function Posts({ posts }) {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }
@@ -54,7 +57,8 @@ export default function Posts({ posts }) {
                     {session && (
                         <a
                             href={'/articles/newpost'}
-                            className={postStyles.newpostlink}>
+                            className={postStyles.newpostlink}
+                        >
                             New Article
                         </a>
                     )}
@@ -63,10 +67,12 @@ export default function Posts({ posts }) {
                             <a
                                 key={post.post_id}
                                 href={'/articles/' + post.post_id}
-                                className={postStyles.post}>
+                                className={postStyles.post}
+                            >
                                 <a
                                     className={postStyles.groupTag}
-                                    href={'/groups/' + post.group_id}>
+                                    href={'/groups/' + post.group_id}
+                                >
                                     {post.group_name}
                                 </a>
                                 <h3>{post.post_title}</h3>

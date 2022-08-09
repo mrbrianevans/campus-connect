@@ -70,7 +70,8 @@ const ProfilePage = ({ user, posts }) => {
                                     }}
                                     width="128"
                                     height="128"
-                                    xmlns="http://www.w3.org/2000/svg">
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
                                     <g className="layer">
                                         <ellipse
                                             cx="64.18181"
@@ -124,7 +125,8 @@ const ProfilePage = ({ user, posts }) => {
                             {posts.map((post, index) => (
                                 <section
                                     className={profileStyles.profile}
-                                    key={index}>
+                                    key={index}
+                                >
                                     {post.post_body.length > 250 ? (
                                         <>
                                             <h3>{post.post_title}</h3>
@@ -149,7 +151,8 @@ const ProfilePage = ({ user, posts }) => {
                                             </p>
                                             <a
                                                 href={'/posts/' + post.post_id}
-                                                className={profileStyles.link}>
+                                                className={profileStyles.link}
+                                            >
                                                 Read
                                             </a>
                                         </>

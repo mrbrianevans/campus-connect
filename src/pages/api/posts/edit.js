@@ -32,9 +32,7 @@ const submitPost = async (title, content, user, group, post_id) => {
     const pool = getDatabasePool()
     // console.log('Editing:', post_id, title, content, user, group)
 
-    const {
-        rows: users
-    } = await pool.query(
+    const { rows: users } = await pool.query(
         'SELECT username FROM posts p, users u WHERE p.userid=u.id AND p.id=$1',
         [post_id]
     )

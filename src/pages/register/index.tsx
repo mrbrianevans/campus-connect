@@ -3,12 +3,15 @@ import styles from '../../styles/Home.module.css'
 import customStyles from '../../styles/custom.module.css'
 import termsStyles from '../../styles/terms.module.css'
 import Navbar from '../../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
 
 import RegisterComponent from './RegisterComponent'
 
 export default function Login() {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }

@@ -22,9 +22,7 @@ const createGroup = async (name, description) => {
     const { getDatabasePool } = require('../../../database/db-connect')
     const pool = getDatabasePool()
     console.log('INSERTING group:', name, description)
-    const {
-        rows
-    } = await pool.query(
+    const { rows } = await pool.query(
         'INSERT INTO groups (groupname, groupdesc) VALUES ($1, $2) RETURNING id;',
         [name, description]
     )

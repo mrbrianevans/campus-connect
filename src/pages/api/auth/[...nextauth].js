@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import Credentials from 'next-auth/providers/credentials'
 import validation from '../modules/validation'
 
 const pgp = require('pg-promise')({ noWarnings: true })
@@ -63,7 +63,7 @@ async function checkCredentials(credentials) {
 
 export default NextAuth({
     providers: [
-        Providers.Credentials({
+        Credentials({
             id: 'username-login',
             name: '',
             credentials: {

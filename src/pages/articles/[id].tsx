@@ -3,21 +3,24 @@ import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import postStyles from '../../styles/post.module.css'
 import { getDatabasePool } from '../../database/db-connect'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vs as SyntaxHighlightStyle } from 'react-syntax-highlighter/dist/cjs/styles/prism'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { CodeProps } from 'react-markdown/lib/ast-to-react'
 
 const PostPage = ({ post }) => {
     const router = useRouter()
-    const [currentUserName, setCurrentUsername] = useState()
-    const [session, loading] = useSession()
+    const [currentUserName, setCurrentUsername] = useState<string>()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     const [reportButtonText, setReportButtonText] = useState('Report')
 
     useEffect(() => {
-        if (!loading) setCurrentUsername(session?.user?.name)
+        if (!loading) setCurrentUsername(session?.user?.name ?? undefined)
     }, [loading])
     useEffect(() => {
         if (!loading) {
@@ -35,13 +38,20 @@ const PostPage = ({ post }) => {
         }
     }, [currentUserName])
     const renderers = {
-        code: ({ language, value }) => {
-            return (
+        code({ node, inline, className, children, ...props }: CodeProps) {
+            const match = /language-(\w+)/.exec(className || '')
+            return !inline && match ? (
                 <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, '')}
                     style={SyntaxHighlightStyle}
-                    language={language}
-                    children={value}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
                 />
+            ) : (
+                <code className={className} {...props}>
+                    {children}
+                </code>
             )
         }
     }
@@ -94,7 +104,8 @@ const PostPage = ({ post }) => {
                                         className={postStyles.author}
                                         href={
                                             '/profile/' + post.author_username
-                                        }>
+                                        }
+                                    >
                                         {post.author}
                                     </a>
                                     {' on '}
@@ -118,7 +129,7 @@ const PostPage = ({ post }) => {
                                         : ''}
                                 </p>
                                 <div className={postStyles.articleContent}>
-                                    <ReactMarkdown renderers={renderers}>
+                                    <ReactMarkdown components={renderers}>
                                         {post.body}
                                     </ReactMarkdown>
                                 </div>
@@ -137,12 +148,14 @@ const PostPage = ({ post }) => {
                                                             'Reported'
                                                         )
                                                     } else {
-                                                        const message = await r.json()
+                                                        const message =
+                                                            await r.json()
                                                         alert(message.message)
                                                     }
                                                 })
                                             }
-                                        }}>
+                                        }}
+                                    >
                                         {reportButtonText}
                                     </button>
                                     {session?.user?.name ===
@@ -154,7 +167,8 @@ const PostPage = ({ post }) => {
                                                     '/articles/newpost/?post_id=' +
                                                         post.id
                                                 )
-                                            }}>
+                                            }}
+                                        >
                                             Edit
                                         </button>
                                     )}
@@ -168,12 +182,14 @@ const PostPage = ({ post }) => {
                                                     'Are you sure you want to delete your post?'
                                                 )
                                                 if (confirmation)
-                                                    deletePost(
-                                                        post.id
-                                                    ).then(() =>
-                                                        router.push('/articles')
+                                                    deletePost(post.id).then(
+                                                        () =>
+                                                            router.push(
+                                                                '/articles'
+                                                            )
                                                     )
-                                            }}>
+                                            }}
+                                        >
                                             Delete
                                         </button>
                                     )}
@@ -216,16 +232,16 @@ const reportPost = (post_id, currentUserName) => {
 export async function getStaticProps({ params }) {
     if (isNaN(params.id)) return { notFound: true }
     const pool = getDatabasePool()
-    const {
-        rows: posts,
-        rowCount: postCount
-    } = await pool.query('SELECT * FROM posts WHERE id=$1', [params.id])
+    const { rows: posts, rowCount: postCount } = await pool.query(
+        'SELECT * FROM posts WHERE id=$1',
+        [params.id]
+    )
     if (postCount !== 1) return { notFound: true }
     const post = posts[0]
-    const {
-        rows: users,
-        rowCount: userCount
-    } = await pool.query('SELECT * FROM users WHERE id=$1', [post.userid])
+    const { rows: users, rowCount: userCount } = await pool.query(
+        'SELECT * FROM users WHERE id=$1',
+        [post.userid]
+    )
     if (userCount !== 1) return { notFound: true }
     const user = users[0]
     const { rows: totalViews } = await pool.query(

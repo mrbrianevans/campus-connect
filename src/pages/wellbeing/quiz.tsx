@@ -2,11 +2,13 @@ import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import quizStyles from '../../styles/quiz.module.css'
 import Navbar from '../../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
-import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useMemo, useState } from 'react'
 
 export default function Wellbeing() {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }
@@ -241,7 +243,8 @@ export default function Wellbeing() {
                                                 handleAnswerOptionClick(
                                                     answer.healthPoints
                                                 )
-                                            }}>
+                                            }}
+                                        >
                                             {answer.answerText}
                                         </button>
                                     ))

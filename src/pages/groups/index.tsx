@@ -2,10 +2,13 @@ import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import groupStyles from '../../styles/groups.module.css'
 import Navbar from '../../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
 
 export default function Groups({ groups }) {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }
@@ -52,7 +55,8 @@ export default function Groups({ groups }) {
                     </p>
                     <a
                         href={'/groups/new'}
-                        className={groupStyles.newGroupLink}>
+                        className={groupStyles.newGroupLink}
+                    >
                         New Group
                     </a>
                     <div className={groupStyles.groupsContainer}>
@@ -60,7 +64,8 @@ export default function Groups({ groups }) {
                             <a
                                 key={index}
                                 className={groupStyles.group}
-                                href={'/groups/' + group.id}>
+                                href={'/groups/' + group.id}
+                            >
                                 <h3>{group.name}</h3>
                                 <p>{group.description}</p>
                                 <p>

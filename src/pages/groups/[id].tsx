@@ -3,10 +3,13 @@ import styles from '../../styles/Home.module.css'
 import postStyles from '../../styles/post.module.css'
 import groupStyles from '../../styles/groups.module.css'
 import Navbar from '../../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
 
 export default function Posts({ posts, group }) {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }
@@ -60,7 +63,8 @@ export default function Posts({ posts, group }) {
                         </div>
                         <a
                             href={'/posts/newpost?group=' + group?.id}
-                            className={postStyles.newpostlink}>
+                            className={postStyles.newpostlink}
+                        >
                             New post
                         </a>
                     </div>
@@ -70,14 +74,16 @@ export default function Posts({ posts, group }) {
                             <a
                                 key={post.post_id}
                                 href={'/posts/' + post.post_id}
-                                className={postStyles.post}>
+                                className={postStyles.post}
+                            >
                                 <a
                                     className={groupStyles.postTag}
                                     href={
                                         post.post_body?.length > 250
                                             ? '/articles'
                                             : '/posts'
-                                    }>
+                                    }
+                                >
                                     {post.post_body?.length > 250
                                         ? 'article'
                                         : 'post'}

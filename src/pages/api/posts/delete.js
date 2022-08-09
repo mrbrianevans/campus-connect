@@ -24,9 +24,7 @@ const deletePost = async (post_id) => {
     const { getDatabasePool } = require('../../../database/db-connect')
     const pool = getDatabasePool()
 
-    const {
-        rows
-    } = await pool.query(
+    const { rows } = await pool.query(
         'WITH deleted AS (DELETE FROM posts WHERE id = $1 RETURNING *) SELECT COUNT(*) FROM deleted;',
         [post_id]
     )

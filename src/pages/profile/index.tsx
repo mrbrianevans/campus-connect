@@ -2,9 +2,9 @@ import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import profileStyles from '../../styles/profile.module.css'
 import Navbar from '../../components/Navbar/Navbar'
-import { signOut, useSession } from 'next-auth/client'
+import { signOut, useSession } from 'next-auth/react'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 
 interface UserProfile {
@@ -26,7 +26,9 @@ interface UserPosts {
 }
 
 export default function Profile() {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     const [user, setUserData] = useState<UserProfile>()
     const [posts, setUserPosts] = useState<UserPosts[]>()
     const [profilePicture, setProfilePicture] = useState()
@@ -37,8 +39,8 @@ export default function Profile() {
             // if session is available, get the user's information and display it.
             axios
                 .post('/api/profile/get_id', {
-                    username: session.user.name,
-                    email: session.user.email
+                    username: session.user?.name,
+                    email: session.user?.email
                 })
                 .then((res) => {
                     const id = res.data.id
@@ -70,7 +72,7 @@ export default function Profile() {
 
             axios
                 .post('/api/proxy/profile_picture', {
-                    username: session.user.name
+                    username: session.user?.name
                 })
                 .then((res) => {
                     setProfilePicture(res.data.results[0].picture.large)
@@ -117,7 +119,8 @@ export default function Profile() {
                                     Have an account?{' '}
                                     <a
                                         className={profileStyles.link}
-                                        href="/login">
+                                        href="/login"
+                                    >
                                         Log in
                                     </a>
                                 </p>
@@ -125,7 +128,8 @@ export default function Profile() {
                                     Don't have an account yet?{' '}
                                     <a
                                         className={profileStyles.link}
-                                        href="/register">
+                                        href="/register"
+                                    >
                                         Register
                                     </a>
                                 </p>
@@ -161,7 +165,8 @@ export default function Profile() {
                                     style={{
                                         alignItems: 'center',
                                         display: 'flex'
-                                    }}>
+                                    }}
+                                >
                                     {profilePicture ? (
                                         <img
                                             style={{
@@ -182,7 +187,8 @@ export default function Profile() {
                                             }}
                                             width="128"
                                             height="128"
-                                            xmlns="http://www.w3.org/2000/svg">
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
                                             <g>
                                                 <ellipse
                                                     cx="64.18181"
@@ -241,7 +247,8 @@ export default function Profile() {
                                                 }
                                             )
                                         }
-                                    }}>
+                                    }}
+                                >
                                     Delete Account
                                 </button>
                                 <button
@@ -254,7 +261,8 @@ export default function Profile() {
                                             signOut({ redirect: false })
                                             await router.push('/')
                                         }
-                                    }}>
+                                    }}
+                                >
                                     Log out
                                 </button>
                             </section>
@@ -263,11 +271,13 @@ export default function Profile() {
                                 <div
                                     className={
                                         profileStyles.recentPostsContainer
-                                    }>
+                                    }
+                                >
                                     {posts.map((post, index) => (
                                         <section
                                             className={profileStyles.profile}
-                                            key={index}>
+                                            key={index}
+                                        >
                                             {post.postcontent.length > 250 ? (
                                                 <>
                                                     <h3>{post.posttitle}</h3>
@@ -283,7 +293,8 @@ export default function Profile() {
                                                     <a
                                                         href={
                                                             '/posts/' + post.id
-                                                        }>
+                                                        }
+                                                    >
                                                         Read
                                                     </a>
                                                 </>

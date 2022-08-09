@@ -1,17 +1,19 @@
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import groupStyles from '../../styles/groups.module.css'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '../../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 
 const NewGroup = ({ groups }) => {
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const router = useRouter()
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }
@@ -83,7 +85,8 @@ const NewGroup = ({ groups }) => {
                                     }
                                 )
                             }
-                            className={groupStyles.submitNewGroup}>
+                            className={groupStyles.submitNewGroup}
+                        >
                             Submit new group for review
                         </button>
                         <p style={{ color: 'crimson' }}>{errorMessage}</p>

@@ -1,4 +1,4 @@
-import { signIn } from 'next-auth/client'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import customStyles from '../../styles/custom.module.css'
@@ -12,16 +12,15 @@ export default function Login() {
     const onSubmit = (e) => {
         e.preventDefault()
 
-        const res = signIn('username-login', {
+        signIn('username-login', {
             callbackUrl: `/login`,
             redirect: false,
             username,
             password
-        })
-        res.then((res) => {
-            if (res.status == 401)
+        }).then((res) => {
+            if (res?.status == 401)
                 setResponse('Username or password is incorrect')
-            if (res.status == 200) router.push('/')
+            if (res?.status == 200) return router.push('/')
         })
     }
 
@@ -32,7 +31,8 @@ export default function Login() {
                     name="username"
                     className={customStyles.input}
                     placeholder="Username"
-                    onChange={(e) => setUsername(e.target.value)}></input>
+                    onChange={(e) => setUsername(e.target.value)}
+                ></input>
             </div>
             <div>
                 <input
@@ -40,7 +40,8 @@ export default function Login() {
                     type="password"
                     className={customStyles.input}
                     placeholder="Password"
-                    onChange={(e) => setPassword(e.target.value)}></input>
+                    onChange={(e) => setPassword(e.target.value)}
+                ></input>
             </div>
             <div>
                 <button className={customStyles.button}>Login</button>

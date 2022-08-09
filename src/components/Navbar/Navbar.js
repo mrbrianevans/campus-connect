@@ -34,7 +34,8 @@ export default function Navbar(props) {
                     rel="stylesheet"
                     href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
                     integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu"
-                    crossorigin="anonymous"></link>
+                    crossorigin="anonymous"
+                ></link>
             </Head>
             <nav className={navbarStyles.NavbarItems}>
                 <h1 className={navbarStyles.navbarlogo}>
@@ -46,20 +47,23 @@ export default function Navbar(props) {
                             clicked
                                 ? 'fas fa-times ' + navbarStyles.fa_times
                                 : 'fas fa-bars ' + navbarStyles.fa_bars
-                        }></i>
+                        }
+                    ></i>
                 </div>
                 <ul
                     className={
                         clicked
                             ? navbarStyles.navmenu_active
                             : navbarStyles.navmenu
-                    }>
+                    }
+                >
                     {menuContent.map((item, index) => {
                         return (
                             <li key={index} style={{ listStyleType: 'none' }}>
                                 <a
                                     className={navbarStyles.navlinks}
-                                    href={item.url}>
+                                    href={item.url}
+                                >
                                     {item.title}
                                 </a>
                             </li>

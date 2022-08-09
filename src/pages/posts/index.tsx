@@ -3,11 +3,14 @@ import styles from '../../styles/Home.module.css'
 import { getDatabasePool } from '../../database/db-connect'
 import postStyles from '../../styles/post.module.css'
 import Navbar from '../../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 
 export default function Posts({ posts }) {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }
@@ -61,7 +64,8 @@ export default function Posts({ posts }) {
                     {session && (
                         <a
                             href={'/posts/newpost'}
-                            className={postStyles.newpostlink}>
+                            className={postStyles.newpostlink}
+                        >
                             New Post
                         </a>
                     )}
@@ -70,10 +74,12 @@ export default function Posts({ posts }) {
                             <a
                                 key={post.post_id}
                                 className={postStyles.post}
-                                href={'/posts/' + post.post_id}>
+                                href={'/posts/' + post.post_id}
+                            >
                                 <a
                                     className={postStyles.groupTag}
-                                    href={'/groups/' + post.group_id}>
+                                    href={'/groups/' + post.group_id}
+                                >
                                     {post.group_name}
                                 </a>
                                 <span
@@ -84,7 +90,8 @@ export default function Posts({ posts }) {
                                             averageViewsLastHour
                                                 ? 'forestgreen'
                                                 : 'darkorange'
-                                    }}>
+                                    }}
+                                >
                                     {post.views_last_hour || 0} view
                                     {post.views_last_hour != 1 ? 's' : ''} in
                                     the last hour

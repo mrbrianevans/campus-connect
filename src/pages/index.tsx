@@ -2,10 +2,13 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import indexStyles from '../styles/index.module.css'
 import Navbar from '../components/Navbar/Navbar'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
 
 export default function Home() {
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     if (loading) {
         return <></>
     }
@@ -84,7 +87,8 @@ export default function Home() {
                     <aside className={indexStyles.sidebar}>
                         <a
                             className={indexStyles.myProfile}
-                            href={session ? '/profile' : '/login'}>
+                            href={session ? '/profile' : '/login'}
+                        >
                             <img
                                 src={'/static/sunglasses_emoji.png'}
                                 className={indexStyles.sunglasses}

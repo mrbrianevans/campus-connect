@@ -12,13 +12,13 @@
 
 .gradientBackground {
     background: linear-gradient(
-            to bottom,
-            transparent,
-            transparent,
-            transparent,
-            transparent,
-            transparent,
-            aliceblue
+        to bottom,
+        transparent,
+        transparent,
+        transparent,
+        transparent,
+        transparent,
+        aliceblue
     );
     width: 100%;
     height: 100%;

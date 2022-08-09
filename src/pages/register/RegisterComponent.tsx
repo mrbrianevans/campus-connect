@@ -75,28 +75,32 @@ export default function Register() {
                     name="username"
                     className={customStyles.input}
                     placeholder="Username"
-                    onChange={(e) => setUsername(e.target.value)}></input>
+                    onChange={(e) => setUsername(e.target.value)}
+                ></input>
             </div>
             <div>
                 <input
                     name="firstname"
                     className={customStyles.input}
                     placeholder="First name"
-                    onChange={(e) => setFirstname(e.target.value)}></input>
+                    onChange={(e) => setFirstname(e.target.value)}
+                ></input>
             </div>
             <div>
                 <input
                     name="lastname"
                     className={customStyles.input}
                     placeholder="Last name"
-                    onChange={(e) => setLastname(e.target.value)}></input>
+                    onChange={(e) => setLastname(e.target.value)}
+                ></input>
             </div>
             <div>
                 <input
                     name="email"
                     className={customStyles.input}
                     placeholder="Email"
-                    onChange={(e) => setEmail(e.target.value)}></input>
+                    onChange={(e) => setEmail(e.target.value)}
+                ></input>
             </div>
             <p></p>
             <div>
@@ -105,7 +109,8 @@ export default function Register() {
                     type="password"
                     className={customStyles.input}
                     placeholder="Password"
-                    onChange={(e) => setPassword(e.target.value)}></input>
+                    onChange={(e) => setPassword(e.target.value)}
+                ></input>
             </div>
             <div>
                 <input
@@ -113,9 +118,8 @@ export default function Register() {
                     type="password"
                     className={customStyles.input}
                     placeholder="Confirm Password"
-                    onChange={(e) =>
-                        setPasswordConfirmation(e.target.value)
-                    }></input>
+                    onChange={(e) => setPasswordConfirmation(e.target.value)}
+                ></input>
             </div>
             <p>{passwordMessage}</p>
             <div>

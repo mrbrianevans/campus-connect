@@ -53,8 +53,7 @@ export default async (req, res) => {
             // prepared statement to input to PostgreSQL
             const registerStatement = new PreparedStatement({
                 name: 'register-user',
-                text:
-                    'INSERT INTO Users (username, firstname, surname, pass, email) values ($1, $2, $3, $4, $5)',
+                text: 'INSERT INTO Users (username, firstname, surname, pass, email) values ($1, $2, $3, $4, $5)',
                 values: [username, firstname, lastname, passwordHash, email]
             })
 

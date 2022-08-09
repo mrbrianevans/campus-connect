@@ -1,14 +1,15 @@
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import postStyles from '../../styles/post.module.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vs as SyntaxHighlightStyle } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import axios from 'axios'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
+import { CodeProps } from 'react-markdown/lib/ast-to-react'
 
 const PostPage = ({ groups }) => {
     const {
@@ -24,9 +25,11 @@ const PostPage = ({ groups }) => {
     const [successMessage, setSuccessMessage] = useState('')
     const [currentUserName, setCurrentUsername] = useState<string>()
     const router = useRouter()
-    const [session, loading] = useSession()
+    const { data, status } = useSession()
+    const loading = useMemo(() => status === 'loading', [status])
+    const session = useMemo(() => data ?? undefined, [data])
     useEffect(() => {
-        if (!loading) setCurrentUsername(session?.user?.name)
+        if (!loading) setCurrentUsername(session?.user?.name ?? undefined)
     }, [loading])
     useEffect(() => setGroup(group_id ?? groups[0].id), [group_id])
     useEffect(() => {
@@ -45,13 +48,20 @@ const PostPage = ({ groups }) => {
     }, [])
 
     const renderers = {
-        code: ({ language, value }) => {
-            return (
+        code({ node, inline, className, children, ...props }: CodeProps) {
+            const match = /language-(\w+)/.exec(className || '')
+            return !inline && match ? (
                 <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, '')}
                     style={SyntaxHighlightStyle}
-                    language={language}
-                    children={value}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
                 />
+            ) : (
+                <code className={className} {...props}>
+                    {children}
+                </code>
             )
         }
     }
@@ -138,8 +148,9 @@ const PostPage = ({ groups }) => {
                         ) : (
                             <div
                                 onClick={() => setEditingContent(true)}
-                                className={postStyles.articleContent}>
-                                <ReactMarkdown renderers={renderers}>
+                                className={postStyles.articleContent}
+                            >
+                                <ReactMarkdown components={renderers}>
                                     {content || defaultContent}
                                 </ReactMarkdown>
                             </div>
@@ -147,7 +158,8 @@ const PostPage = ({ groups }) => {
                         <select
                             className={postStyles.newPostGroup}
                             value={group}
-                            onChange={(v) => setGroup(v.target.value)}>
+                            onChange={(v) => setGroup(v.target.value)}
+                        >
                             {groups?.map((group) => (
                                 <option value={group.id} key={group.id}>
                                     {group.groupname}
@@ -188,7 +200,8 @@ const PostPage = ({ groups }) => {
                                     setErrorMessage(
                                         'Not logged in. Cannot post unless logged in'
                                     )
-                            }}>
+                            }}
+                        >
                             Submit{' '}
                             {isEditing
                                 ? 'edit'
@@ -199,7 +212,8 @@ const PostPage = ({ groups }) => {
                         </button>
                         <a
                             href={'/posts'}
-                            className={postStyles.cancelpostlink}>
+                            className={postStyles.cancelpostlink}
+                        >
                             Cancel
                         </a>
                         <p style={{ color: 'crimson' }}>{errorMessage}</p>
